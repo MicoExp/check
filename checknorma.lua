@@ -35,7 +35,7 @@ inicfg.save(ini, 'checknorma.ini')
 function main()
     if not isSampLoaded() then return end
 	while not isSampAvailable() do wait(100) end
-    autoupdate("https://raw.githubusercontent.com/MicoExp/checnorma/main/tools.json", '['..string.upper(thisScript().name)..']: ', "")
+    autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
     sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
     sampRegisterChatCommand('check', mph)
