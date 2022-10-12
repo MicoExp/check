@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.1')
+script_version('1.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -194,15 +194,6 @@ function imgui.OnDrawFrame( ... )
                 end)       
             end
             imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Lorika Bullet', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Lorika_Bullet')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Lorika_Bullet, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
             if imgui.MenuButton(u8'Jakson Freeze', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
                     sampSendChat('/astats Jakson_Freeze')
@@ -232,15 +223,6 @@ function imgui.OnDrawFrame( ... )
                     sampAddChatMessage('Troubled_Teens, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'xHearts Beloved', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats xHearts_Beloved')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('xHearts_Beloved, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
             imgui.PushFont(font_16)
             imgui.CenterText(u8'Следящая администрация')
             imgui.PopFont()
@@ -263,12 +245,12 @@ function imgui.OnDrawFrame( ... )
                 end)       
             end
             imgui.SameLine()
-            if imgui.MenuButton(u8'Sim Walino', imgui.ImVec2(0, 30), 0.5, true) then
+            if imgui.MenuButton(u8'Azizbek Camridge', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
-                    sampSendChat('/astats Sim_Walino')
+                    sampSendChat('/astats Azizbek_Camridge')
                     parsim = true
                     wait(500)
-                    sampAddChatMessage('Sim_Walino, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                    sampAddChatMessage('Azizbek_Camridge, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.Text('')
@@ -885,7 +867,7 @@ function autoupdate(json_url, prefix, url)
                 lua_thread.create(function(prefix)
                   local dlstatus = require('moonloader').download_status
                   local color = -1
-                  sampAddChatMessage((prefix..'Обнаружено обновление. Пытаюсь обновиться c '..thisScript().version..' на '..updateversion), color)
+                  sampAddChatMessage((tag..'{FFFFFF}Обновляюсь с '..thisScript().version..' на '..updateversion), main_color)
                   wait(250)
                   downloadUrlToFile(updatelink, thisScript().path,
                     function(id3, status1, p13, p23)
@@ -893,14 +875,14 @@ function autoupdate(json_url, prefix, url)
                         print(string.format('Загружено %d из %d.', p13, p23))
                       elseif status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
                         print('Загрузка обновления завершена.')
-                        sampAddChatMessage((prefix..'Обновление завершено!'), color)
+                        sampAddChatMessage((tag..'{FFFFFF}Успешно обновился!'), main_color)
                         updates.v = true
                         goupdatestatus = true
                         lua_thread.create(function() wait(500) thisScript():reload() end)
                       end
                       if status1 == dlstatus.STATUSEX_ENDDOWNLOAD then
                         if goupdatestatus == nil then
-                          sampAddChatMessage((prefix..'Обновление прошло неудачно. Запускаю устаревшую версию..'), color)
+                          sampAddChatMessage((tag..'{FFFFFF}Обновление прошло неудачно. Запускаю устаревшую версию..'), main_color)
                           update = false
                         end
                       end
