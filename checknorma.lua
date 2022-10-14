@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.2')
+script_version('1.3')
 
 require('moonloader')
 require('sampfuncs')
@@ -223,25 +223,52 @@ function imgui.OnDrawFrame( ... )
                     sampAddChatMessage('Troubled_Teens, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
+            imgui.SameLine()
+            if imgui.MenuButton(u8'Ethan Kingsize', imgui.ImVec2(0, 30), 0.5, true) then
+                lua_thread.create(function()
+                    sampSendChat('/astats Ethan_Kingsize')
+                    parsim = true
+                    wait(500)
+                    sampAddChatMessage('Ethan_Kingsize, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                end)       
+            end
+            imgui.SetCursorPosX(11)
+            if imgui.MenuButton(u8'Blockkid Minatory', imgui.ImVec2(0, 30), 0.5, true) then
+                lua_thread.create(function()
+                    sampSendChat('/astats Blockkid_Minatory')
+                    parsim = true
+                    wait(500)
+                    sampAddChatMessage('Blockkid_Minatory, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                end)       
+            end
+            imgui.SameLine()
+            if imgui.MenuButton(u8'Four Minatory', imgui.ImVec2(0, 30), 0.5, true) then
+                lua_thread.create(function()
+                    sampSendChat('/astats Four_Minatory')
+                    parsim = true
+                    wait(500)
+                    sampAddChatMessage('Four_Minatory, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                end)       
+            end
             imgui.PushFont(font_16)
             imgui.CenterText(u8'Следящая администрация')
             imgui.PopFont()
             imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Four Espada', imgui.ImVec2(0, 30), 0.5, true) then
+            if imgui.MenuButton(u8'Greck Whells', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
-                    sampSendChat('/astats Four_Espada')
+                    sampSendChat('/astats Greck_Whells')
                     parsim = true
                     wait(500)
-                    sampAddChatMessage('Four_Espada, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                    sampAddChatMessage('Greck_Whells, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.SameLine()
-            if imgui.MenuButton(u8'Pierre Cardin', imgui.ImVec2(0, 30), 0.5, true) then
+            if imgui.MenuButton(u8'Doublle Sexual', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
-                    sampSendChat('/astats Pierre_Cardin')
+                    sampSendChat('/astats Doublle_Sexual')
                     parsim = true
                     wait(500)
-                    sampAddChatMessage('Pierre_Cardin, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                    sampAddChatMessage('Doublle_Sexual, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.SameLine()
