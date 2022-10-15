@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.3')
+script_version('1.4')
 
 require('moonloader')
 require('sampfuncs')
@@ -185,15 +185,6 @@ function imgui.OnDrawFrame( ... )
                 end)       
             end
             imgui.SameLine()
-            if imgui.MenuButton(u8'Vissarion Beloved', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Vissarion_Beloved')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Vissarion_Beloved, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SetCursorPosX(11)
             if imgui.MenuButton(u8'Jakson Freeze', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
                     sampSendChat('/astats Jakson_Freeze')
@@ -260,15 +251,6 @@ function imgui.OnDrawFrame( ... )
                     parsim = true
                     wait(500)
                     sampAddChatMessage('Greck_Whells, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Doublle Sexual', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Doublle_Sexual')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Doublle_Sexual, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.SameLine()
