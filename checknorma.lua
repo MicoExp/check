@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.4')
+script_version('1.5')
 
 require('moonloader')
 require('sampfuncs')
@@ -224,21 +224,21 @@ function imgui.OnDrawFrame( ... )
                 end)       
             end
             imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Blockkid Minatory', imgui.ImVec2(0, 30), 0.5, true) then
+            if imgui.MenuButton(u8'Fking Blockkid', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
-                    sampSendChat('/astats Blockkid_Minatory')
+                    sampSendChat('/astats Fking_Blockkid')
                     parsim = true
                     wait(500)
-                    sampAddChatMessage('Blockkid_Minatory, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                    sampAddChatMessage('Fking_Blockkid, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.SameLine()
-            if imgui.MenuButton(u8'Four Minatory', imgui.ImVec2(0, 30), 0.5, true) then
+            if imgui.MenuButton(u8'Fking Woked', imgui.ImVec2(0, 30), 0.5, true) then
                 lua_thread.create(function()
-                    sampSendChat('/astats Four_Minatory')
+                    sampSendChat('/astats Fking_Woked')
                     parsim = true
                     wait(500)
-                    sampAddChatMessage('Four_Minatory, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                    sampAddChatMessage('Fking_Woked, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.PushFont(font_16)
@@ -251,6 +251,15 @@ function imgui.OnDrawFrame( ... )
                     parsim = true
                     wait(500)
                     sampAddChatMessage('Greck_Whells, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
+                end)       
+            end
+            imgui.SameLine()
+            if imgui.MenuButton(u8'xNeptune Universe', imgui.ImVec2(0, 30), 0.5, true) then
+                lua_thread.create(function()
+                    sampSendChat('/astats xNeptune_Universe')
+                    parsim = true
+                    wait(500)
+                    sampAddChatMessage('xNeptune_Universe, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
                 end)       
             end
             imgui.SameLine()
