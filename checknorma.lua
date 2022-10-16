@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.5')
+script_version('1.6')
 
 require('moonloader')
 require('sampfuncs')
@@ -37,19 +37,21 @@ function main()
 	while not isSampAvailable() do wait(100) end
     autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
-    sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
+    sampAddChatMessage(tag..'{FFFFFF}вы Артём Шумов, скрипт отгружен', main_color)
     sampRegisterChatCommand('check', mph)
-
+    
     while true do
         imgui.ShowCursor = main_window.v
         imgui.Process = main_window.v or time.v
         wait(0)
         _, id = sampGetPlayerIdByCharHandle(PLAYER_PED)
 		nick = sampGetPlayerNickname(id)
+        
         if main_window.v == false then
             imgui.Process = false
             imgui.ShowCursor = false
         end
+        
     end
 end
 
@@ -61,17 +63,7 @@ function mph(args)
     main_window.v = true
 end
 
-function samp.onShowDialog(dialogId, style, title, button1, button2, text)
-	if parsim and dialogId == 228 and title:find("Статистика администратора") then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
-				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-        parsim = false
-		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
-	end
-end
+
 
 function imgui.CenterText(text)
     local width = imgui.GetWindowWidth()
@@ -100,328 +92,7 @@ function imgui.BeforeDrawFrame()
     end
 end
 
-function imgui.OnDrawFrame( ... )
-    if main_window.v then
-	    imgui.SetNextWindowSize(imgui.ImVec2(570,305), imgui.Cond.FirstUseEver)
-	    imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-        imgui.Begin(u8'fdtools', main_window, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoMove + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
-        imgui.PushFont(font_25)
-        imgui.TextColoredRGB(u8'{D6D6D6}Norma')
-        imgui.PopFont()
-        imgui.SameLine()
-        imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v1.1', u8'Обновление от 21 сентября')
-        imgui.SameLine()
-        imgui.SetCursorPosY(10)
-        imgui.SetCursorPosX(528)
-        imgui.PushFont(fa_font12)
-        if imgui.CloseButton(fa.ICON_FA_TIMES, imgui.ImVec2(30,30)) then
-            main_window.v = false
-        end
-        imgui.PopFont()
-        imgui.PushFont(font_24)
-        imgui.SetCursorPosY(50)
-        imgui.Text(u8'Категория')
-        imgui.PopFont()
-        imgui.SetCursorPosY(105)
-        if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(150,40)) then
-            user = 1
-        end
-        if imgui.MenuNoAButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(150,40)) then
-        end
-        imgui.Text(u8'\n\n\n\nСоблюдай интервал\nв 1 секунду!')
-        imgui.SetCursorPosY(54)
-        imgui.SetCursorPosX(180)
-        imgui.BeginChild(u8'##menu-profile', imgui.ImVec2(373, 235), imgui.WindowFlags.NoBorders)
-        if user == 1 or user == nil then
-            imgui.SetCursorPosY(11)
-            imgui.PushFont(font_16)
-            imgui.CenterText(u8'Руководящая администрация')
-            imgui.PopFont()
-            imgui.SetCursorPosX(11)
-            imgui.SetCursorPosY(41)
-            if imgui.MenuButton(u8'Tranquilizer Beloved', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Tranquilizer_Beloved')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Tranquilizer_Beloved, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Alexander Holyman', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Alexander_Holyman')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Alexander_Holyman, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Falcon Blade', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Falcon_Blade')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Falcon_Blade, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Alexander Beloved', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Alexander_Beloved')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Alexander_Beloved, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Sergio Escobar', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Sergio_Escobar')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Sergio_Escobar, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Jakson Freeze', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Jakson_Freeze')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Jakson_Freeze, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.PushFont(font_16)
-            imgui.CenterText(u8'Ведущая администрация')
-            imgui.PopFont()
-            imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Coleman Sumeragi', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Coleman_Sumeragi')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Coleman_Sumeragi, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Troubled Teens', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Troubled_Teens')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Troubled_Teens, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Ethan Kingsize', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Ethan_Kingsize')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Ethan_Kingsize, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Fking Blockkid', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Fking_Blockkid')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Fking_Blockkid, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Fking Woked', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Fking_Woked')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Fking_Woked, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.PushFont(font_16)
-            imgui.CenterText(u8'Следящая администрация')
-            imgui.PopFont()
-            imgui.SetCursorPosX(11)
-            if imgui.MenuButton(u8'Greck Whells', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Greck_Whells')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Greck_Whells, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'xNeptune Universe', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats xNeptune_Universe')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('xNeptune_Universe, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.SameLine()
-            if imgui.MenuButton(u8'Azizbek Camridge', imgui.ImVec2(0, 30), 0.5, true) then
-                lua_thread.create(function()
-                    sampSendChat('/astats Azizbek_Camridge')
-                    parsim = true
-                    wait(500)
-                    sampAddChatMessage('Azizbek_Camridge, отыграл: '..adm_onl_seg1..' час(а-ов) '..adm_onl_seg2..' минут(а)', main_color )
-                end)       
-            end
-            imgui.Text('')
-        end
-        imgui.EndChild()
-       
-        --imgui.PushFont(font_25)
-       --[[ imgui.Text(u8'Курьер')
-        imgui.PopFont()
-        if imgui.MenuButton(u8'Начало', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Курьер]: В Сан-Фиеро бродит торговец! Ваша задача, купить у него товар и отдать заказчику. Приз: 100 донат-рублей')
-                wait(1000)
-                sampSendChat('/aad [Курьер]: Торговец сообщит вам координаты заказчика.')
-                wait(1000)
-                sampSendChat('/aad [Курьер]: Сейчас торговец находится недалеко от церкви Сан-Фиеро. ')
-            end)       
-        end      
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Новое место', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Курьер]: Торговец уже находится рядом с Закусочной, которая находится недалеко от церкви.')
-            end)       
-        end
-        imgui.PushStyleColor(imgui.Col.Border, imgui.ImVec4(0.0, 0.0, 0.0, 0.0))
-        imgui.NewInputText(u8'##idprefix', id_stats, 140, u8'Введите ID игрока', 2)
-        imgui.PopStyleColor()
-        if imgui.MenuButton(u8'Привет', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('Привет, ты пришёл за товаром?')
-            end)       
-        end 
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Покупка', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('Подожди, я гляну, что у меня осталось!')
-                wait(1000)
-                sampSendChat('/me заглянул в сумку')
-                wait(3000)
-                sampSendChat('Твой товар у меня есть, стоит он 5000$')
-                wait(1000)
-                sampSendChat('/b Используйте /pay '..id..' 5000')
-            end)       
-        end 
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Деньги отданы', imgui.ImVec2(120, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('Сейчас отдам тебе твой товар, смотри не потеряй!')
-                wait(3000)
-                sampSendChat('/me передал товар')
-                wait(1000)
-                sampSendChat('/givegun '..id_stats.v..' 24 5')
-                wait(1000)
-                sampSendChat('Заказчик находится рядом с казино в Лас-Вентурасе, надеюсь найдёшь! У тебя есть всего 5 минут, чтобы отвезти товар.')
-                wait(1000)
-                sampSendChat('/b Используй команду /dgun, чтобы отдать оружие заказчику!')
-            end)       
-        end ]]
-       
-        
-        --[[ if imgui.MenuButton(u8'Начало', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Спрячься от смерти]: Сейчас начнётся мероприятие «Спрячься от смерти».')
-                wait(1000)
-                sampSendChat('/aad [Спрячься от смерти]: Последний выживший получит 7O донат рублей!')
-                wait(1000)
-                sampSendChat('/aad [Спрячься от смерти]: Для телепортации используй /gomp')
-            end)       
-        end  
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Активнее', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Спрячься от смерти]: Активнее /gomp')
-            end)       
-        end 
-        
-        if imgui.MenuButton(u8'Условия', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/s Сейчас я объясню вам всем правила.')
-                wait(1000)
-                sampSendChat('/s Ваша задача за 1 минуту успеть спрятаться в определенных местах, и не двигаться!')
-                wait(1000)
-                sampSendChat('/s Администраторы стоящие на своих постах будут стрелять в вас, если он вас заметил и убил - вы проиграли.')
-                wait(1000)
-                sampSendChat('/s Подниматься выше - нельзя! Я буду следить за всем происходящим, нарушитель будет заспавнен, дм - деморган.')
-            end)       
-        end]]
-        --[[if imgui.MenuButton(u8'Начало', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: По городу Лас-Вентурас разбросаны автомобили!')
-                wait(1000)
-                sampSendChat('/aad [Поиск автомобилей]: Всего в городе 5 автомобилей, три из них розового цвета!')
-                wait(1000)
-                sampSendChat('/aad [Поиск автомобилей]: Вы должны найти автомобиль, сесть в него и написать в репорт (/rep)')
-            end)       
-        end
-        imgui.PushStyleColor(imgui.Col.Border, imgui.ImVec4(0.0, 0.0, 0.0, 0.0))
-        imgui.NewInputText(u8'##idprefix', id_stats, 140, u8'Введите ID игрока', 2)
-        imgui.PopStyleColor()
-        if imgui.MenuButton(u8'Вокзал', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: Машина Sandking достаётся '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Аммо', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: Машина Police Ranger достаётся '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Мост', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: Машина Police Car достаётся '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end
-        imgui.SameLine()
-        if imgui.MenuButton(u8'ЛВПД', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: Машина FBI Truck достаётся '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end
-        imgui.SameLine()
-        if imgui.MenuButton(u8'Аэро', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Поиск автомобилей]: Машина Hotring B достаётся '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end
-        if imgui.MenuButton(u8'Правила', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/s Что такое колесо фортуны? Сейчас всё объясню.')
-                wait(1000)
-                sampSendChat('/s Победитель мероприятия, должен будет скинуть ссылку на свой ВКонтакте.')
-                wait(1000)
-                sampSendChat('/s Мы добавляем его в специальный чат, где прокрутим рулетку, в рулетке имеются разные призы.')
-                wait(1000)
-                sampSendChat('/s От обычных виртов, аптечек до аксессуара в /donaterub. Шанс у каждого приза свой.')
-                wait(1000)
-                sampSendChat('/s Поэтому выиграть желаемый приз будет трудновато, но надеемся, что вам повезёт!')
-            end)       
-        end
-        imgui.PushStyleColor(imgui.Col.Border, imgui.ImVec4(0.0, 0.0, 0.0, 0.0))
-        imgui.NewInputText(u8'##idprefix', id_stats, 140, u8'Введите ID игрока', 2)
-        imgui.PopStyleColor()
-        if imgui.MenuButton(u8'Победитель', imgui.ImVec2(90, 30), 0.5, true) then
-            lua_thread.create(function()
-                sampSendChat('/aad [Мероприятие]: Прокрутку в колесе получает: '..sampGetPlayerNickname(id_stats.v)..' ['..id_stats.v..'], поздравляем!')
-            end)       
-        end -- ]]
 
-        imgui.End()
-    end
-end
 
 function imgui.NewInputText(lable, val, width, hint, hintpos)
     local hint = hint and hint or ''
