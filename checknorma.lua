@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.6')
+script_version('1.5')
 
 require('moonloader')
 require('sampfuncs')
@@ -10,12 +10,10 @@ encoding.default        = "CP1251"
 u8                      = encoding.UTF8 
 local imgui             = require 'imgui'
 local inicfg            = require 'inicfg'
-local samp = require "lib.samp.events"
 local vkeys             = require 'vkeys'
 local rkeys             = require 'rkeys'
 local fa                = require 'fAwesome5'
-local memory            = require 'memory'
-local hook              = require("lib.samp.events")
+local samp              = require("lib.samp.events")
 local fa_glyph_ranges   = imgui.ImGlyphRanges({ fa.min_range, fa.max_range })
 local sw, sh            = getScreenResolution()
 local main_window       = imgui.ImBool(false)
@@ -32,12 +30,15 @@ local ini = inicfg.load({
 }, 'checknorma.ini')
 inicfg.save(ini, 'checknorma.ini')
 
+file = io.open(getGameDirectory().."//moonloader//checker.txt", "w")
+filea = io.open(getGameDirectory().."//moonloader//achecker.txt", "w")
+
 function main()
     if not isSampLoaded() then return end
 	while not isSampAvailable() do wait(100) end
     autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
-    sampAddChatMessage(tag..'{FFFFFF}вы Артём Шумов, скрипт отгружен', main_color)
+    sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
     sampRegisterChatCommand('check', mph)
     
     while true do
@@ -63,8 +64,23 @@ function mph(args)
     main_window.v = true
 end
 
-
-
+function samp.onShowDialog(dialogId, style, title, button1, button2, text)
+	if parsim and dialogId == 228 and title:find("Статистика администратора") then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
+				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				lvl = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+        parsim = false
+		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
+	end
+end
+local arr = os.date("*t")
 function imgui.CenterText(text)
     local width = imgui.GetWindowWidth()
 	local height = imgui.GetWindowHeight()
@@ -92,7 +108,174 @@ function imgui.BeforeDrawFrame()
     end
 end
 
-
+function imgui.OnDrawFrame( ... )
+    if main_window.v then
+	    imgui.SetNextWindowSize(imgui.ImVec2(240,215), imgui.Cond.FirstUseEver)
+	    imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
+        imgui.Begin(u8'fdtools', main_window, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoMove + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
+        imgui.PushFont(font_25)
+        imgui.TextColoredRGB(u8'{D6D6D6}Checker')
+        imgui.PopFont()
+        imgui.SameLine()
+        imgui.SetCursorPosY(25)
+        imgui.Hint(u8'{313742}v2.1', u8'Обновление от 21 сентября')
+        imgui.SameLine()
+        imgui.SetCursorPosY(10)
+        imgui.SetCursorPosX(196)
+        imgui.PushFont(fa_font12)
+        if imgui.CloseButton(fa.ICON_FA_TIMES, imgui.ImVec2(30,30)) then
+            main_window.v = false
+        end
+        imgui.PopFont()
+        imgui.SetCursorPosY(65)
+        if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
+            lua_thread.create(function()
+                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать писать в чат!', main_color)
+                sampSendChat('/astats Psychopathy_Alone')
+                parsim = true
+                wait(500)
+                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время проверки: '..os.date('%H:%M:%S')..'\nКоличество не отыгравших норму:\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n— Основатель: [gerrards|Psychopathy_Alone], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Alexander_Holyman')
+                parsim = true
+                wait(500)
+                file:write('— Исполняющий Обязанности Онователя: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Phonk_Way')
+                parsim = true
+                wait(500)
+                file:write('— Исполняющий Обязанности Онователя: [shmff|Phonk_Way], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Alexander_Beloved')
+                parsim = true
+                wait(500)
+                file:write('— Заместитель Онователя: [sanyaobichniy|Alexander_Beloved], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Sergio_Escobar')
+                parsim = true
+                wait(500)
+                file:write('—  Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Jakson_Freeze')
+                parsim = true
+                wait(500)
+                file:write('— Помощник Онователя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Coleman_Sumeragi')
+                parsim = true
+                wait(500)
+                file:write('\nВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n— Куратор Сервера: [antontolya|Coleman_Sumeragi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xMoroz_Universe')
+                parsim = true
+                wait(500)
+                file:write('— Заместитель Куратор Сервера: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Ethan_Kingsize')
+                parsim = true
+                wait(500)
+                file:write('— Руководитель: [watsom|Ethan_Kingsize], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Blockkid')
+                parsim = true
+                wait(500)
+                file:write('— Главный Администратор: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Woked')
+                parsim = true
+                wait(500)
+                file:write('— Заместитель ГА: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Greck_Whells')
+                parsim = true
+                wait(500)
+                file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий з Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xNeptune_Universe')
+                parsim = true
+                wait(500)
+                file:write('— Главный следящий за Госс: [xneptune_universe|xNeptune_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Cambridge')
+                parsim = true
+                wait(500)
+                file:write('— Главный следящий за Мафиями: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+                file:close()
+                sampAddChatMessage(tag..'{FFFFF}Проверка нормы окончена', main_color)
+            end)       
+        end
+        if imgui.MenuButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(210,40)) then
+            lua_thread.create(function()
+                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать писать в чат!', main_color)
+                sampSendChat('/astats Brok_Backwoods')
+                parsim = true
+                wait(500)
+                filea:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время начала проверки: '..os.date('%H:%M:%S')..'\nКоличество не отыгравших норму: \nКоличество человек, получившие выговор: \nКоличество снятых администраторов: \nКоличество администраторов, которые не являются администраторами: \n\n1. Brok_Backwoods ('..lvl..'), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Ded_Moroz')
+                parsim = true
+                wait(500)
+                filea:write('2. Ded_Moroz ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Ethereal_Blade')
+                parsim = true
+                wait(500)
+                filea:write('3. Ethereal_Blade ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Delario')
+                parsim = true
+                wait(500)
+                filea:write('4. Fking_Delario ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Nikita_Lovely')
+                parsim = true
+                wait(500)
+                filea:write('5. Nikita_Lovely ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Simba_Quattroki')
+                parsim = true
+                wait(500)
+                filea:write('6. Simba_Quattroki ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Steven_Troll')
+                parsim = true
+                wait(500)
+                filea:write('7. Steven_Troll ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Stronglaw_Wade')
+                parsim = true
+                wait(500)
+                filea:write('8. Stronglaw_Wade ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Tima_Luvak')
+                parsim = true
+                wait(500)
+                filea:write('9. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Vlad_Lord')
+                parsim = true
+                wait(500)
+                filea:write('10. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xElvin_Morante')
+                parsim = true
+                wait(500)
+                filea:write('11. xElvin_Morante ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xSaturn_Universe')
+                parsim = true
+                wait(500)
+                filea:write('12. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('Время окончания проверки: '..os.date('%H:%M:%S'))
+                filea:close()
+                sampAddChatMessage(tag..'{FFFFF}Проверка нормы окончена', main_color)
+            end)
+        end
+        if imgui.MenuNoAButton(fa.ICON_FA_COGS..u8' Настройки', imgui.ImVec2(210,40)) then
+        end
+        imgui.End()
+    end
+end
 
 function imgui.NewInputText(lable, val, width, hint, hintpos)
     local hint = hint and hint or ''
