@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('1.5')
+script_version('2.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -118,7 +118,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.1', u8'Обновление от 21 сентября')
+        imgui.Hint(u8'{313742}v2.2', u8'Обновление от 18 октября')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -130,7 +130,7 @@ function imgui.OnDrawFrame( ... )
         imgui.SetCursorPosY(65)
         if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
             lua_thread.create(function()
-                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать писать в чат!', main_color)
+                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
                 sampSendChat('/astats Psychopathy_Alone')
                 parsim = true
                 wait(500)
@@ -176,10 +176,10 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— Руководитель: [watsom|Ethan_Kingsize], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Fking_Blockkid')
+                sampSendChat('/astats Fking_Troll')
                 parsim = true
                 wait(500)
-                file:write('— Главный Администратор: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Главный Администратор: [shitartya|Fking_Troll], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Woked')
                 parsim = true
@@ -206,7 +206,7 @@ function imgui.OnDrawFrame( ... )
         end
         if imgui.MenuButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(210,40)) then
             lua_thread.create(function()
-                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать писать в чат!', main_color)
+                sampAddChatMessage(tag..'{FFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
                 sampSendChat('/astats Brok_Backwoods')
                 parsim = true
                 wait(500)
