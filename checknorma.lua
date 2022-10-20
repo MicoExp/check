@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('ѕроверка нормы')
-script_version('2.3')
+script_version('2.3.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -160,11 +160,11 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('Ч ѕомощник ќновател€: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Coleman_Sumeragi')
-                parsim = true
+           --   wait(1000)
+            --    sampSendChat('/astats Coleman_Sumeragi')
+            --    parsim = true
                 wait(500)
-                file:write('\n¬≈ƒ”ўјя јƒћ»Ќ»—“–ј÷»я:\nЧ  уратор —ервера: [antontolya|Coleman_Sumeragi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('\n¬≈ƒ”ўјя јƒћ»Ќ»—“–ј÷»я:\n\n')
                 wait(1000)
                 sampSendChat('/astats xMoroz_Universe')
                 parsim = true
@@ -184,7 +184,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
-                file:write('\n√Ћј¬Ќџ≈ —Ћ≈ƒяў»≈:\nЧ √лавный след€щий з Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('\n√Ћј¬Ќџ≈ —Ћ≈ƒяў»≈:\nЧ √лавный след€щий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xNeptune_Universe')
                 parsim = true
