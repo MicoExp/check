@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.3.2')
+script_version('2.3.3')
 
 require('moonloader')
 require('sampfuncs')
@@ -131,10 +131,7 @@ function imgui.OnDrawFrame( ... )
         if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
-                sampSendChat('/astats Psychopathy_Alone')
-                parsim = true
-                wait(500)
-                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время проверки: '..os.date('%H:%M:%S')..'\nКоличество не отыгравших норму:\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n— Основатель: [gerrards|Psychopathy_Alone], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..'\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Holyman')
                 parsim = true
