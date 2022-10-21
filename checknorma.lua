@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.3.3')
+script_version('2.3.5')
 
 require('moonloader')
 require('sampfuncs')
@@ -151,7 +151,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Sergio_Escobar')
                 parsim = true
                 wait(500)
-                file:write('—  Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Jakson_Freeze')
                 parsim = true
@@ -162,11 +162,15 @@ function imgui.OnDrawFrame( ... )
             --    parsim = true
                 wait(500)
                 file:write('\nВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n\n')
-                wait(1000)
                 sampSendChat('/astats xMoroz_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Куратор Сервера: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Куратор Сервера: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Ethereal_Blade')
+                parsim = true
+                wait(500)
+                file:write('— Заместитель Куратора Сервера: [rysteer|Ethereal_Blade], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Blockkid')
                 parsim = true
@@ -178,20 +182,25 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— Главный Администратор: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Greck_Whells')
+                sampSendChat('/astats Nikita_Lovely')
                 parsim = true
                 wait(500)
-                file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Заместитель Главного Администратора: [dmitriywerbakow|Nikita_Lovely], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Delario')
+                parsim = true
+                wait(500)
+                file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий за Ghetto: [id384023189|Fking_Delario], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xNeptune_Universe')
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Госс: [xneptune_universe|xNeptune_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats xFackingsleiw_Mother')
-                parsim = true
-                wait(500)
-                file:write('— Главный следящий за Мафиями: [rodion.konoplyov|xFackingsleiw_Mother], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+            --    wait(1000)
+             --   sampSendChat('/astats xFackingsleiw_Mother')
+             --   parsim = true
+            --    wait(500)
+            --    file:write('— Главный следящий за Мафиями: [rodion.konoplyov|xFackingsleiw_Mother], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)       
