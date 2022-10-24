@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('ѕроверка нормы')
-script_version('2.3.5')
+script_version('2.3.6')
 
 require('moonloader')
 require('sampfuncs')
@@ -108,6 +108,12 @@ function imgui.BeforeDrawFrame()
     end
 end
 
+function FormatTime(time)
+    local timezone_offset = 86400 - os.date('%H', 0) * 3600
+    local time = time + timezone_offset
+    return os.date((os.date("%H",time) == "00" and '%M:%S' or '%H:%M:%S'), time)
+end
+
 function imgui.OnDrawFrame( ... )
     if main_window.v then
 	    imgui.SetNextWindowSize(imgui.ImVec2(240,215), imgui.Cond.FirstUseEver)
@@ -138,10 +144,10 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('Ч »сполн€ющий ќб€занности ќновател€: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Phonk_Way')
+                sampSendChat('/astats Hurricane_Pike')
                 parsim = true
                 wait(500)
-                file:write('Ч »сполн€ющий ќб€занности ќновател€: [shmff|Phonk_Way], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Ч »сполн€ющий ќб€занности ќновател€: [shmff|Hurricane_Pike], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Beloved')
                 parsim = true
@@ -182,20 +188,15 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('Ч √лавный јдминистратор: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Nikita_Lovely')
+                sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
-                file:write('Ч «аместитель √лавного јдминистратора: [dmitriywerbakow|Nikita_Lovely], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('\n√Ћј¬Ќџ≈ —Ћ≈ƒяў»≈:\nЧ √лавный след€щий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Fking_Delario')
+                sampSendChat('/astats Fking_Troll')
                 parsim = true
                 wait(500)
-                file:write('\n√Ћј¬Ќџ≈ —Ћ≈ƒяў»≈:\nЧ √лавный след€щий за Ghetto: [id384023189|Fking_Delario], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats xNeptune_Universe')
-                parsim = true
-                wait(500)
-                file:write('Ч √лавный след€щий за √осс: [xneptune_universe|xNeptune_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Ч √лавный след€щий за √осс: [id552808627|Fking_Troll], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
             --    wait(1000)
              --   sampSendChat('/astats xFackingsleiw_Mother')
              --   parsim = true
@@ -218,55 +219,50 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 filea:write('2. Ded_Moroz ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Ethereal_Blade')
+                sampSendChat('/astats Argus_Magnum')
                 parsim = true
                 wait(500)
-                filea:write('3. Ethereal_Blade ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Fking_Delario')
-                parsim = true
-                wait(500)
-                filea:write('4. Fking_Delario ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Nikita_Lovely')
-                parsim = true
-                wait(500)
-                filea:write('5. Nikita_Lovely ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Simba_Quattroki')
-                parsim = true
-                wait(500)
-                filea:write('6. Simba_Quattroki ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Steven_Troll')
-                parsim = true
-                wait(500)
-                filea:write('7. Steven_Troll ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Stronglaw_Wade')
-                parsim = true
-                wait(500)
-                filea:write('8. Stronglaw_Wade ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('5. Argus_Magnum ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Tima_Luvak')
                 parsim = true
                 wait(500)
-                filea:write('9. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('6. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Vlad_Lord')
                 parsim = true
                 wait(500)
-                filea:write('10. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats xElvin_Morante')
-                parsim = true
-                wait(500)
-                filea:write('11. xElvin_Morante ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('7. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xSaturn_Universe')
                 parsim = true
                 wait(500)
-                filea:write('12. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('8. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                wait(1000)
+                sampSendChat('/astats Felix_Dragon')
+                parsim = true
+                wait(500)
+                filea:write('9. Felix_Dragon ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Cambridge')
+                parsim = true
+                wait(500)
+                filea:write('10. Fking_Cambridge ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                wait(1000)
+                sampSendChat('/astats Fking_Troll')
+                parsim = true
+                wait(500)
+                filea:write('11. Fking_Troll ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                wait(1000)
+                sampSendChat('/astats Sacha_Makaveli')
+                parsim = true
+                wait(500)
+                filea:write('12. Sacha_Makaveli ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                wait(1000)
+                sampSendChat('/astats Sergey_Fikallis')
+                parsim = true
+                wait(500)
+                filea:write('13. Sergey_Fikallis ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 filea:write('¬рем€ окончани€ проверки: '..os.date('%H:%M:%S'))
                 filea:close()
                 sampAddChatMessage(tag..'{FFFFFF}ѕроверка нормы окончена', main_color)
