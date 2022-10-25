@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.3.6')
+script_version('2.3.7')
 
 require('moonloader')
 require('sampfuncs')
@@ -197,11 +197,11 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Госс: [id552808627|Fking_Troll], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-            --    wait(1000)
-             --   sampSendChat('/astats xFackingsleiw_Mother')
-             --   parsim = true
-            --    wait(500)
-            --    file:write('— Главный следящий за Мафиями: [rodion.konoplyov|xFackingsleiw_Mother], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+                wait(1000)
+                sampSendChat('/astats Kane_Backwoods')
+                parsim = true
+                wait(500)
+                file:write('— Главный следящий за Мафиями: [kane_bloods|Kane_Backwoods], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)       
