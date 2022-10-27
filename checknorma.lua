@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.0')
+script_version('2.4.1')
 
 require('moonloader')
 require('sampfuncs')
@@ -38,7 +38,7 @@ function main()
 	while not isSampAvailable() do wait(100) end
     autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
-    sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
+    sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check p.s Шумов гей', main_color)
     sampRegisterChatCommand('check', mph)
     
     while true do
@@ -124,7 +124,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (240)')
+        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (241)')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -163,30 +163,35 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('— Помощник Онователя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xMoroz_Universe')
+                parsim = true
+                wait(500)
+                file:write('— Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
            --   wait(1000)
             --    sampSendChat('/astats Coleman_Sumeragi')
             --    parsim = true
                 wait(1000)
                 file:write('\nВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n\n')
-            --    sampSendChat('/astats xMoroz_Universe')
-             --   parsim = true
-           --     wait(500)
-            --    file:write('— Куратор Сервера: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-            --    wait(1000)
-                sampSendChat('/astats Ethereal_Blade')
-                parsim = true
-                wait(500)
-                file:write('— Заместитель Куратора Сервера: [rysteer|Ethereal_Blade], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
                 sampSendChat('/astats Fking_Blockkid')
                 parsim = true
                 wait(500)
-                file:write('— Руководитель: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Куратор Сервера: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+            --    wait(1000)
+            --    sampSendChat('/astats Ethereal_Blade')
+            --    parsim = true
+            --    wait(500)
+            --    file:write('— Заместитель Куратора Сервера: [rysteer|Ethereal_Blade], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Woked')
                 parsim = true
                 wait(500)
-                file:write('— Главный Администратор: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Руководитель: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xNeptune_Universe')
+                parsim = true
+                wait(500)
+                file:write('— Заместитель Главного Администратора: [id738483976|xNeptune_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
@@ -197,11 +202,11 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Госс: [id552808627|Troll_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Kane_Backwoods')
-                parsim = true
-                wait(500)
-                file:write('— Главный следящий за Мафиями: [kane_bloods|Kane_Backwoods], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+            --    wait(1000)
+            --    sampSendChat('/astats Kane_Backwoods')
+           --     parsim = true
+            --    wait(500)
+            --    file:write('— Главный следящий за Мафиями: [kane_bloods|Kane_Backwoods], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)       
