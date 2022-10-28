@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.1')
+script_version('2.4.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -38,8 +38,17 @@ function main()
 	while not isSampAvailable() do wait(100) end
     autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
-    sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check p.s Шумов гей', main_color)
+    
     sampRegisterChatCommand('check', mph)
+    if sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Hurricane_Pike" then
+        sampAddChatMessage(tag..'{FFFFFF}Шумов, чекай вручную.', main_color)
+        script:unload()
+    elseif sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Alexander_Holyman" then
+        sampAddChatMessage(tag..'{FFFFFF}Холиман, чекай вручную.', main_color)
+        script:unload()
+    else    
+        sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
+    end
     
     while true do
         imgui.ShowCursor = main_window.v
@@ -201,12 +210,12 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Troll_Freeze')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Госс: [id552808627|Troll_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-            --    wait(1000)
-            --    sampSendChat('/astats Kane_Backwoods')
-           --     parsim = true
-            --    wait(500)
-            --    file:write('— Главный следящий за Мафиями: [kane_bloods|Kane_Backwoods], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+                file:write('— Главный следящий за Госс: [id233130269|Goro_Kubo], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Kane_Backwoods')
+                parsim = true
+                wait(500)
+                file:write('— Главный следящий за Мафиями: [id661103753|Artem_Safaryan], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)       
