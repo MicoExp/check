@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.2')
+script_version('2.4.3')
 
 require('moonloader')
 require('sampfuncs')
@@ -17,7 +17,7 @@ local samp              = require("lib.samp.events")
 local fa_glyph_ranges   = imgui.ImGlyphRanges({ fa.min_range, fa.max_range })
 local sw, sh            = getScreenResolution()
 local main_window       = imgui.ImBool(false)
-local time      = imgui.ImBool(false)
+local settings     = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
 local main_color = 0x1E90FF
 local tag = "{1E90FF}>> [checknorma] "
@@ -41,8 +41,7 @@ function main()
     
     sampRegisterChatCommand('check', mph)
     if sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Hurricane_Pike" then
-        sampAddChatMessage(tag..'{FFFFFF}Шумов, чекай вручную.', main_color)
-        script:unload()
+        sampAddChatMessage(tag..'{FFFFFF}Ладно, Шумов, тебе можно. Активация: {1E90FF}/check', main_color)
     elseif sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Alexander_Holyman" then
         sampAddChatMessage(tag..'{FFFFFF}Холиман, чекай вручную.', main_color)
         script:unload()
@@ -51,8 +50,8 @@ function main()
     end
     
     while true do
-        imgui.ShowCursor = main_window.v
-        imgui.Process = main_window.v or time.v
+        imgui.ShowCursor = main_window.v or settings.v
+        imgui.Process = main_window.v
         wait(0)
         _, id = sampGetPlayerIdByCharHandle(PLAYER_PED)
 		nick = sampGetPlayerNickname(id)
@@ -133,7 +132,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (241)')
+        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (243)')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -146,7 +145,7 @@ function imgui.OnDrawFrame( ... )
         if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
-                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..'\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
+                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время начала проверки: '..os.date('%H:%M:%S')..'\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Holyman')
                 parsim = true
@@ -195,24 +194,24 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Fking_Woked')
                 parsim = true
                 wait(500)
-                file:write('— Руководитель: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Земеститель Куратора: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats xNeptune_Universe')
+                sampSendChat('/astats xEntagle_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Главного Администратора: [id738483976|xNeptune_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Заместитель Главного Администратора: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
                 file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Troll_Freeze')
+                sampSendChat('/astats Goro_Kubo')
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Госс: [id233130269|Goro_Kubo], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Kane_Backwoods')
+                sampSendChat('/astats Artem_Safaryan')
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Мафиями: [id661103753|Artem_Safaryan], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
@@ -228,61 +227,115 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 filea:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время начала проверки: '..os.date('%H:%M:%S')..'\nКоличество не отыгравших норму: \nКоличество человек, получившие выговор: \nКоличество снятых администраторов: \nКоличество администраторов, которые не являются администраторами: \n\n1. Brok_Backwoods ('..lvl..'), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Ded_Moroz')
-                parsim = true
-                wait(500)
-                filea:write('2. Ded_Moroz ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
                 sampSendChat('/astats Argus_Magnum')
                 parsim = true
                 wait(500)
-                filea:write('5. Argus_Magnum ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('2. Argus_Magnum ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Tima_Luvak')
+                sampSendChat('/astats Do_Ta')
                 parsim = true
                 wait(500)
-                filea:write('6. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('3. Do_Ta ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Vlad_Lord')
+                sampSendChat('/astats Edward_Yamaguchi')
                 parsim = true
                 wait(500)
-                filea:write('7. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('4. Edward_Yamaguchi ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats xSaturn_Universe')
+                sampSendChat('/astats Ethan_Woods')
                 parsim = true
                 wait(500)
-                filea:write('8. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
-                wait(1000)
-                sampSendChat('/astats Felix_Dragon')
-                parsim = true
-                wait(500)
-                filea:write('9. Felix_Dragon ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('5. Ethan_Woods ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Cambridge')
                 parsim = true
                 wait(500)
-                filea:write('10. Fking_Cambridge ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('6. Fking_Cambridge ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Fking_Troll')
+                sampSendChat('/astats Heiden_Washington')
                 parsim = true
                 wait(500)
-                filea:write('11. Fking_Troll ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('7. Heiden_Washington ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Sacha_Makaveli')
                 parsim = true
                 wait(500)
-                filea:write('12. Sacha_Makaveli ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('8. Sacha_Makaveli ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Sergey_Fikallis')
                 parsim = true
                 wait(500)
-                filea:write('13. Sergey_Fikallis ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                filea:write('9. Sergey_Fikallis ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Tima_Luvak')
+                parsim = true
+                wait(500)
+                filea:write('10. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Treyz_Anderson')
+                parsim = true
+                wait(500)
+                filea:write('11. Treyz_Anderson ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Troll_Freeze')
+                parsim = true
+                wait(500)
+                filea:write('12. Troll_Freeze ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Vlad_Lord')
+                parsim = true
+                wait(500)
+                filea:write('13. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats xSaturn_Universe')
+                parsim = true
+                wait(500)
+                filea:write('14. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Zakhar_Ward')
+                parsim = true
+                wait(500)
+                filea:write('15. Zakhar_Ward ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 filea:write('Время окончания проверки: '..os.date('%H:%M:%S'))
                 filea:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)
         end
         if imgui.MenuNoAButton(fa.ICON_FA_COGS..u8' Настройки', imgui.ImVec2(210,40)) then
+        --    settings.v = true
+        end
+        imgui.End()
+    end
+    if settings.v then
+	    imgui.SetNextWindowSize(imgui.ImVec2(340,135), imgui.Cond.FirstUseEver)
+	    imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 1.33), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
+        imgui.Begin(u8'##settings', settings, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.NoMove + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
+        if imgui.CircleButton('##orange', ini.config.theme == 1,  imgui.ImVec4(1.00, 0.42, 0.00, 1.00)) then
+            ini.config.theme = 1
+            inicfg.save(ini, 'fdtools.ini')
+            style()
+        end
+        imgui.SameLine()
+        if imgui.CircleButton('##blue', ini.config.theme == 2, imgui.ImVec4(0.28, 0.56, 1.00, 1.00)) then
+            ini.config.theme = 2
+            inicfg.save(ini, 'fdtools.ini')
+            style()
+        end
+        imgui.SameLine()
+        if imgui.CircleButton('##green', ini.config.theme == 3, imgui.ImVec4(0.00, 0.80, 0.38, 1.00)) then
+            ini.config.theme = 3
+            inicfg.save(ini, 'fdtools.ini')
+            style()
+        end
+        imgui.SameLine()
+        if imgui.CircleButton('##pink', ini.config.theme == 4, imgui.ImVec4(0.41, 0.19, 0.63, 1.00)) then
+            ini.config.theme = 4
+            inicfg.save(ini, 'fdtools.ini')
+            style()
+        end
+        imgui.SetCursorPosY(94)
+        if imgui.MenuButton(u8'Закрыть', imgui.ImVec2(310,30)) then
+            settings.v = false
         end
         imgui.End()
     end
@@ -495,6 +548,26 @@ function imgui.CloseButton(text, size)
 		local button = imgui.Button(text, size)
 	imgui.PopStyleColor(5)
 	return button
+end
+function imgui.CircleButton(str_id, bool, color4, radius, isimage)
+	local rBool = false
+
+	local p = imgui.GetCursorScreenPos()
+	local isimage = isimage or false
+	local radius = radius or 10
+	local draw_list = imgui.GetWindowDrawList()
+	if imgui.InvisibleButton(str_id, imgui.ImVec2(23, 23)) then
+		rBool = true
+	end
+
+	draw_list:AddCircleFilled(imgui.ImVec2(p.x + radius, p.y + radius), radius-3, imgui.ColorConvertFloat4ToU32(isimage and imgui.ImVec4(0,0,0,0) or color4))
+
+	if bool then
+		draw_list:AddCircle(imgui.ImVec2(p.x + radius, p.y + radius), radius, imgui.ColorConvertFloat4ToU32(color4),_,1.5)
+	end
+
+	imgui.SetCursorPosY(imgui.GetCursorPosY()+radius)
+	return rBool
 end
 
 function style()
