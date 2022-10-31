@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.3')
+script_version('2.4.4')
 
 require('moonloader')
 require('sampfuncs')
@@ -20,7 +20,7 @@ local main_window       = imgui.ImBool(false)
 local settings     = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
 local main_color = 0x1E90FF
-local tag = "{1E90FF}>> [checknorma] "
+local tag = "{FF7F50}>> [Чекер нормы] "
 
 local ini = inicfg.load({
     config = {
@@ -40,14 +40,7 @@ function main()
     style()
     
     sampRegisterChatCommand('check', mph)
-    if sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Hurricane_Pike" then
-        sampAddChatMessage(tag..'{FFFFFF}Ладно, Шумов, тебе можно. Активация: {1E90FF}/check', main_color)
-    elseif sampGetPlayerNickname(select(2,sampGetPlayerIdByCharHandle(PLAYER_PED))) == "Alexander_Holyman" then
-        sampAddChatMessage(tag..'{FFFFFF}Холиман, чекай вручную.', main_color)
-        script:unload()
-    else    
-        sampAddChatMessage(tag..'{FFFFFF}скрипт загружен! Активация: {1E90FF}/check', main_color)
-    end
+    sampAddChatMessage(tag..'{FFFFFF}скрипт успешно загружен, для активациия воспользуйтесь: {FF7F50}/check', main_color)
     
     while true do
         imgui.ShowCursor = main_window.v or settings.v
@@ -132,7 +125,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (243)')
+        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (244)')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -152,10 +145,10 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— Исполняющий Обязанности Онователя: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Hurricane_Pike')
+                sampSendChat('/astats Yuuta_Okkotsu')
                 parsim = true
                 wait(500)
-                file:write('— Исполняющий Обязанности Онователя: [shmff|Hurricane_Pike], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Исполняющий Обязанности Онователя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Lexash_Holyman')
                 parsim = true
@@ -206,10 +199,10 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Goro_Kubo')
+                sampSendChat('/astats Fking_Cambridge')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Госс: [id233130269|Goro_Kubo], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Главный следящий за Госс: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Artem_Safaryan')
                 parsim = true
