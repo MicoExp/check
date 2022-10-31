@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.4')
+script_version('2.4.5')
 
 require('moonloader')
 require('sampfuncs')
@@ -19,7 +19,7 @@ local sw, sh            = getScreenResolution()
 local main_window       = imgui.ImBool(false)
 local settings     = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
-local main_color = 0x1E90FF
+local main_color = 0xFF7F50
 local tag = "{FF7F50}>> [Чекер нормы] "
 
 local ini = inicfg.load({
@@ -816,7 +816,7 @@ function autoupdate(json_url, prefix, url)
                 lua_thread.create(function(prefix)
                   local dlstatus = require('moonloader').download_status
                   local color = -1
-                  sampAddChatMessage((tag..'{FFFFFF}Обновляюсь с '..thisScript().version..' на '..updateversion), main_color)
+                  sampAddChatMessage((tag..'{FFFFFF}Идёт обновление на новую версию {FF7F50}'..updateversion), main_color)
                   wait(250)
                   downloadUrlToFile(updatelink, thisScript().path,
                     function(id3, status1, p13, p23)
@@ -824,14 +824,14 @@ function autoupdate(json_url, prefix, url)
                         print(string.format('Загружено %d из %d.', p13, p23))
                       elseif status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
                         print('Загрузка обновления завершена.')
-                        sampAddChatMessage((tag..'{FFFFFF}Успешно обновился!'), main_color)
+                        sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..', прошло успешно!'), main_color)
                         updates.v = true
                         goupdatestatus = true
                         lua_thread.create(function() wait(500) thisScript():reload() end)
                       end
                       if status1 == dlstatus.STATUSEX_ENDDOWNLOAD then
                         if goupdatestatus == nil then
-                          sampAddChatMessage((tag..'{FFFFFF}Обновление прошло неудачно. Запускаю устаревшую версию..'), main_color)
+                          sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..', прошло неудачно!'), main_color)
                           update = false
                         end
                       end
