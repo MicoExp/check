@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.4.5')
+script_version('2.5.1')
 
 require('moonloader')
 require('sampfuncs')
@@ -66,22 +66,24 @@ function mph(args)
 end
 
 function samp.onShowDialog(dialogId, style, title, button1, button2, text)
-	if parsim and dialogId == 228 and title:find("Статистика администратора") then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
-				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+	if parsim and dialogId == 228 and title:find("Статистика администратора") then 
+		for line in text:gmatch("[^\r\n]+") do
+			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then 
+				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") 
 			end
 		end
-        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				lvl = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+        for line in text:gmatch("[^\r\n]+") do 
+			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then 
+				lvl = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") 
 			end
 		end
         parsim = false
-		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
+		return false 
 	end
 end
+
 local arr = os.date("*t")
+
 function imgui.CenterText(text)
     local width = imgui.GetWindowWidth()
 	local height = imgui.GetWindowHeight()
@@ -125,7 +127,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.4', u8'Точная версия (244)')
+        imgui.Hint(u8'{313742}v2.5', u8'Точная версия (251)')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -135,10 +137,11 @@ function imgui.OnDrawFrame( ... )
         end
         imgui.PopFont()
         imgui.SetCursorPosY(65)
-        if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
+        if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(162, 40), 0.5, true) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
-                file:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время начала проверки: '..os.date('%H:%M:%S')..'\n\nРУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
+                file:write('Проверка нормы за: '..arr.day..'.'.. arr.month..'.'..arr.year)
+                file:write('\n&#127875; РУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Holyman')
                 parsim = true
@@ -148,7 +151,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Yuuta_Okkotsu')
                 parsim = true
                 wait(500)
-                file:write('— Исполняющий Обязанности Онователя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Исполняющий Обязанности Онователя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 wait(1000)
                 sampSendChat('/astats Lexash_Holyman')
                 parsim = true
@@ -158,7 +161,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Sergio_Escobar')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 wait(1000)
                 sampSendChat('/astats Jakson_Freeze')
                 parsim = true
@@ -168,51 +171,47 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats xMoroz_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-           --   wait(1000)
-            --    sampSendChat('/astats Coleman_Sumeragi')
-            --    parsim = true
+                file:write('— Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 wait(1000)
-                file:write('\nВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n\n')
+                file:write('&#127875; ВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n\n')
                 sampSendChat('/astats Fking_Blockkid')
                 parsim = true
                 wait(500)
                 file:write('— Куратор Сервера: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-            --    wait(1000)
-            --    sampSendChat('/astats Ethereal_Blade')
-            --    parsim = true
-            --    wait(500)
-            --    file:write('— Заместитель Куратора Сервера: [rysteer|Ethereal_Blade], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Woked')
                 parsim = true
                 wait(500)
-                file:write('— Земеститель Куратора: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Земеститель Куратора: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 wait(1000)
                 sampSendChat('/astats xEntagle_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Главного Администратора: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— Главный Администратор: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
                 wait(1000)
-                sampSendChat('/astats Greck_Whells')
-                parsim = true
-                wait(500)
-                file:write('\nГЛАВНЫЕ СЛЕДЯЩИЕ:\n— Главный следящий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                file:write('&#127875; ГЛАВНЫЕ СЛЕДЯЩИЕ:\n\n')
                 sampSendChat('/astats Fking_Cambridge')
                 parsim = true
                 wait(500)
                 file:write('— Главный следящий за Госс: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Artem_Safaryan')
+                sampSendChat('/astats Edward_Yamaguchi')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Мафиями: [id661103753|Artem_Safaryan], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.')
+                file:write('— Главный следящий за Мафиями: [jackmorales|Edward_Yamaguchi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Greck_Whells')
+                parsim = true
+                wait(500)
+                file:write('— Главный следящий за Гетто: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)       
         end
-        if imgui.MenuButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(210,40)) then
+        imgui.SameLine()
+        if imgui.MenuNoAButton(fa.ICON_FA_COGS, imgui.ImVec2(40, 40), 0.5, true) then
+        end
+        if imgui.MenuButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(162,40)) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
                 sampSendChat('/astats Brok_Backwoods')
@@ -293,6 +292,9 @@ function imgui.OnDrawFrame( ... )
                 filea:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)
+        end
+        imgui.SameLine()
+        if imgui.MenuNoAButton(fa.ICON_FA_COGS, imgui.ImVec2(40, 40), 0.5, true) then
         end
         if imgui.MenuNoAButton(fa.ICON_FA_COGS..u8' Настройки', imgui.ImVec2(210,40)) then
         --    settings.v = true
@@ -832,7 +834,7 @@ function autoupdate(json_url, prefix, url)
                       if status1 == dlstatus.STATUSEX_ENDDOWNLOAD then
                         if goupdatestatus == nil then
                           sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..', прошло неудачно!'), main_color)
-                          update = false
+                                  update = false
                         end
                       end
                     end
