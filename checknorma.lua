@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5.1')
+script_version('2.5.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -21,6 +21,7 @@ local settings     = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
 local main_color = 0xFF7F50
 local tag = "{FF7F50}>> [Чекер нормы] "
+local god = {'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'}
 
 local ini = inicfg.load({
     config = {
@@ -80,6 +81,15 @@ function samp.onShowDialog(dialogId, style, title, button1, button2, text)
         parsim = false
 		return false 
 	end
+    if parsim and dialogId == 1932 and title:find("Оффлайн статистика") then
+        for line in text:gmatch("[^\r\n]+") do
+            if line:find("Послед. вход%: %[%d+%/%d+%/%d+ %d+%:%d+%]") then
+                lc_d, lc_m, lc_y, lc_h, lc_min = line:match("Послед. вход%: %[(%d+)%/(%d+)%/(%d+) (%d+)%:(%d+)%]")
+            end
+        end
+        parsim = false
+        return false
+    end
 end
 
 local arr = os.date("*t")
@@ -127,7 +137,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v2.5', u8'Точная версия (251)')
+        imgui.Hint(u8'{313742}v2.5', u8'Точная версия (252)')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -139,73 +149,85 @@ function imgui.OnDrawFrame( ... )
         imgui.SetCursorPosY(65)
         if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(162, 40), 0.5, true) then
             lua_thread.create(function()
-                sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
-                file:write('Проверка нормы за: '..arr.day..'.'.. arr.month..'.'..arr.year)
-                file:write('\n&#127875; РУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ:\n\n')
+                sampAddChatMessage(tag..'{FFFFFF}началась проверка нормы! Не пишите ничего в чат, примерное время проверки 20 секунд.', main_color)
+                file:write('Проверка нормы за '..arr.day..'.'.. arr.month..'.'..arr.year)
+                file:write('\n— Руководящая администрация:\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Holyman')
                 parsim = true
                 wait(500)
-                file:write('— Исполняющий Обязанности Онователя: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Исполняющий Обязанности Основателя: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Yuuta_Okkotsu')
                 parsim = true
                 wait(500)
-                file:write('— Исполняющий Обязанности Онователя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                file:write('Исполняющий Обязанности Основателя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Lexash_Holyman')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Онователя: [sanyaobichniy|Lexash_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Заместитель Основателя: [sanyaobichniy|Lexash_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Sergio_Escobar')
                 parsim = true
                 wait(500)
-                file:write('— Заместитель Онователя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                file:write('Заместитель Основателя: [nelipova|Sergio_Escobar], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Jakson_Freeze')
                 parsim = true
                 wait(500)
-                file:write('— Помощник Онователя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Помощник Основателя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xMoroz_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                file:write('Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                file:write('&#127875; ВЕДУЩАЯ АДМИНИСТРАЦИЯ:\n\n')
+                file:write('\n— Ведущая администрация:\n')
                 sampSendChat('/astats Fking_Blockkid')
                 parsim = true
                 wait(500)
-                file:write('— Куратор Сервера: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Куратор Сервера: [shitartya|Fking_Blockkid], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Fking_Woked')
                 parsim = true
                 wait(500)
-                file:write('— Земеститель Куратора: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                file:write('Земеститель Куратора: [derejaba|Fking_Woked], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
+                sampSendChat('/astats Skerro_Quenty')
+                parsim = true
+                wait(500)
+                file:write('Руководитель: [xkotsamp|Skerro_Quenty], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                --[[ wait(1000)
+                sampSendChat('/astats xEntagle_Universe')
+                parsim = true
+                wait(500)
+                file:write('Главный администратор: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xEntagle_Universe')
                 parsim = true
                 wait(500)
-                file:write('— Главный Администратор: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n\n')
+                file:write('Заместитель Главного администратора: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                file:write('&#127875; ГЛАВНЫЕ СЛЕДЯЩИЕ:\n\n')
+                ]]
+                file:write('\n— Главные следящие:\n')
+                wait(1000)
                 sampSendChat('/astats Fking_Cambridge')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Госс: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Главный следящий за Goss: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Edward_Yamaguchi')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Мафиями: [jackmorales|Edward_Yamaguchi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Главный следящий за Mafia: [jackmorales|Edward_Yamaguchi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
-                file:write('— Главный следящий за Гетто: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Главный следящий за Ghetto: [abrakadabranaxuy|Greck_Whells], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 file:close()
-                sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
+                sampAddChatMessage(tag..'{FFFFFF}проверка была окончена, проверьте путь: {FF7F50}'..getGameDirectory()..'//moonloader//checker.txt', main_color)
             end)       
         end
         imgui.SameLine()
@@ -214,81 +236,191 @@ function imgui.OnDrawFrame( ... )
         if imgui.MenuButton(fa.ICON_FA_INFO_CIRCLE..u8' Администрация', imgui.ImVec2(162,40)) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка началась! Во время проверки не стоит, ничего писать в чат!', main_color)
-                sampSendChat('/astats Brok_Backwoods')
+                filea:write('— Проверка нормы за '..arr.day..'.'.. arr.month..'.'..arr.year..', проверка началась в '..os.date('%H:%M:%S')..' (время +2 к Московскому).\nКоличество не отыгравших норму: \nКоличество человек, получившие выговор: \nКоличество снятых администраторов: \nКоличество администраторов, которые не являются администраторами: \n\n')
+                sampSendChat('/astats Aleksandr_Koltakovv')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Aleksandr_Koltakovv')
                 parsim = true
                 wait(500)
-                filea:write('Проверка нормы на '..arr.day..'.'.. arr.month..'.'..arr.year..', время начала проверки: '..os.date('%H:%M:%S')..'\nКоличество не отыгравших норму: \nКоличество человек, получившие выговор: \nКоличество снятых администраторов: \nКоличество администраторов, которые не являются администраторами: \n\n1. Brok_Backwoods ('..lvl..'), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                filea:write('1. Aleksandr_Koltakovv ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Argus_Magnum')
                 parsim = true
-                wait(500)
-                filea:write('2. Argus_Magnum ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Do_Ta')
+                sampSendChat('/getoffstats Argus_Magnum')
                 parsim = true
                 wait(500)
-                filea:write('3. Do_Ta ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('2. Argus_Magnum ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Artem_Safaryan')
+                parsim = true
                 wait(1000)
-                sampSendChat('/astats Edward_Yamaguchi')
+                sampSendChat('/getoffstats Artem_Safaryan')
                 parsim = true
                 wait(500)
-                filea:write('4. Edward_Yamaguchi ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('3. Artem_Safaryan ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Benjamin_Lewandowski')
+                parsim = true
                 wait(1000)
-                sampSendChat('/astats Ethan_Woods')
+                sampSendChat('/getoffstats Benjamin_Lewandowski')
                 parsim = true
                 wait(500)
-                filea:write('5. Ethan_Woods ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('4. Benjamin_Lewandowski ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Denis_Vider')
+                parsim = true
                 wait(1000)
-                sampSendChat('/astats Fking_Cambridge')
+                sampSendChat('/getoffstats Denis_Vider')
                 parsim = true
                 wait(500)
-                filea:write('6. Fking_Cambridge ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                filea:write('5. Denis_Vider ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Ethan_Luvak')
+                parsim = true
                 wait(1000)
+                sampSendChat('/getoffstats Ethan_Luvak')
+                parsim = true
+                wait(500)
+                filea:write('6. Ethan_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Ezzka_Outsize')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Ezzka_Outsize')
+                parsim = true
+                wait(500)
+                filea:write('7. Ezzka_Outsize ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Goro_Kubo')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Goro_Kubo')
+                parsim = true
+                wait(500)
+                filea:write('8. Goro_Kubo ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Heiden_Washington')
                 parsim = true
-                wait(500)
-                filea:write('7. Heiden_Washington ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
+                sampSendChat('/getoffstats Heiden_Washington')
+                parsim = true
+                wait(500)
+                filea:write('9. Heiden_Washington ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Hose_Armando')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Hose_Armando')
+                parsim = true
+                wait(500)
+                filea:write('10. Hose_Armando ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Leha_Popov')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Leha_Popov')
+                parsim = true
+                wait(500)
+                filea:write('11. Leha_Popov ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Lord_Hunters')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Lord_Hunters')
+                parsim = true
+                wait(500)
+                filea:write('12. Lord_Hunters ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Martuwa_Killah')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Martuwa_Killah')
+                parsim = true
+                wait(500)
+                filea:write('13. Martuwa_Killah ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Milk_Hokage')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Milk_Hokage')
+                parsim = true
+                wait(500)
+                filea:write('14. Milk_Hokage ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Sacha_Makaveli')
                 parsim = true
-                wait(500)
-                filea:write('8. Sacha_Makaveli ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
+                sampSendChat('/getoffstats Sacha_Makaveli')
+                parsim = true
+                wait(500)
+                filea:write('15. Sacha_Makaveli ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Sergey_Fikallis')
                 parsim = true
-                wait(500)
-                filea:write('9. Sergey_Fikallis ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
+                sampSendChat('/getoffstats Sergey_Fikallis')
+                parsim = true
+                wait(500)
+                filea:write('16. Sergey_Fikallis ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Sergey_Sheinn')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Sergey_Sheinn')
+                parsim = true
+                wait(500)
+                filea:write('17. Sergey_Sheinn ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Simba_Quattroki')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Simba_Quattroki')
+                parsim = true
+                wait(500)
+                filea:write('18. Simba_Quattroki ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Smaug_Basside')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Smaug_Basside')
+                parsim = true
+                wait(500)
+                filea:write('19. Smaug_Basside ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Tima_Luvak')
                 parsim = true
-                wait(500)
-                filea:write('10. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
+                sampSendChat('/getoffstats Tima_Luvak')
+                parsim = true
+                wait(500)
+                filea:write('20. Tima_Luvak ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats Treyz_Anderson')
                 parsim = true
-                wait(500)
-                filea:write('11. Treyz_Anderson ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Troll_Freeze')
+                sampSendChat('/getoffstats Treyz_Anderson')
                 parsim = true
                 wait(500)
-                filea:write('12. Troll_Freeze ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Vlad_Lord')
-                parsim = true
-                wait(500)
-                filea:write('13. Vlad_Lord ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                filea:write('21. Treyz_Anderson ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
                 sampSendChat('/astats xSaturn_Universe')
                 parsim = true
-                wait(500)
-                filea:write('14. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
-                sampSendChat('/astats Zakhar_Ward')
+                sampSendChat('/getoffstats xSaturn_Universe')
                 parsim = true
                 wait(500)
-                filea:write('15. Zakhar_Ward ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                filea:write('Время окончания проверки: '..os.date('%H:%M:%S'))
+                filea:write('22. xSaturn_Universe ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                wait(1000) -- между
+                sampSendChat('/astats Zakhar_Ward')
+                parsim = true
+                wait(1000)
+                sampSendChat('/getoffstats Zakhar_Ward')
+                parsim = true
+                wait(500)
+                filea:write('23. Zakhar_Ward ('..lvl..' уровень), отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\nЗаходил последний раз: '..lc_d..' '..(god[tonumber(lc_m)])..' '..lc_y..' года\n')
+                filea:write('\n\n— Проверка была окончена в '..os.date('%H:%M:%S')..' (время +2 к Московскому).')
                 filea:close()
                 sampAddChatMessage(tag..'{FFFFFF}Проверка нормы окончена', main_color)
             end)
