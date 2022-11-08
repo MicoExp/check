@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5.3')
+script_version('2.5.3 fix')
 
 require('moonloader')
 require('sampfuncs')
@@ -71,6 +71,11 @@ function samp.onShowDialog(dialogId, style, title, button1, button2, text)
 		for line in text:gmatch("[^\r\n]+") do
 			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then 
 				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") 
+			end
+		end
+        for line in text:gmatch("[^\r\n]+") do
+			if line:find("%{FFFFFF%}В сети за вчера:%s+%{dfb519%}%d+ час. %d+ мин") then 
+				adm_onl_v1, adm_onl_v2 = line:match("%{FFFFFF%}В сети за вчера:%s+%{dfb519%}(%d+) час. (%d+) мин") 
 			end
 		end
         for line in text:gmatch("[^\r\n]+") do 
@@ -152,16 +157,15 @@ function imgui.OnDrawFrame( ... )
                 sampAddChatMessage(tag..'{FFFFFF}началась проверка нормы! Не пишите ничего в чат, примерное время проверки 20 секунд.', main_color)
                 file:write('Проверка нормы за '..arr.day..'.'.. arr.month..'.'..arr.year)
                 file:write('\n— Руководящая администрация:\n')
+                sampSendChat('/astats Yuuta_Okkotsu')
+                parsim = true
+                wait(500)
+                file:write('Основатель: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Alexander_Holyman')
                 parsim = true
                 wait(500)
                 file:write('Исполняющий Обязанности Основателя: [nekonation|Alexander_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                sampSendChat('/astats Yuuta_Okkotsu')
-                parsim = true
-                wait(500)
-                file:write('Исполняющий Обязанности Основателя: [shmff|Yuuta_Okkotsu], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Lexash_Holyman')
                 parsim = true
