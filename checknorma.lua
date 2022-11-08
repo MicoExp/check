@@ -176,7 +176,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Jakson_Freeze')
                 parsim = true
                 wait(500)
-                file:write('Помощник Основателя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Заместитель Основателя: [ne_rad_jizni|Jakson_Freeze], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats xMoroz_Universe')
                 parsim = true
@@ -198,12 +198,12 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('Руководитель: [xkotsamp|Skerro_Quenty], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                --[[ wait(1000)
-                sampSendChat('/astats xEntagle_Universe')
+                wait(1000)
+                sampSendChat('/astats xHearts_Beloved')
                 parsim = true
                 wait(500)
-                file:write('Главный администратор: [id738483976|xEntagle_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                file:write('Главный администратор: [trifonovdev|xHearts_Beloved], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                --[[ wait(1000)
                 sampSendChat('/astats xEntagle_Universe')
                 parsim = true
                 wait(500)
@@ -216,12 +216,12 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('Главный следящий за Goss: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                --[[wait(1000)
                 sampSendChat('/astats Edward_Yamaguchi')
                 parsim = true
                 wait(500)
                 file:write('Главный следящий за Mafia: [jackmorales|Edward_Yamaguchi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
+                ]]wait(1000)
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
@@ -958,14 +958,14 @@ function autoupdate(json_url, prefix, url)
                         print(string.format('Загружено %d из %d.', p13, p23))
                       elseif status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
                         print('Загрузка обновления завершена.')
-                        sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..', прошло успешно!'), main_color)
+                        sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..'{FFFFFF} прошло успешно!'), main_color)
                         updates.v = true
                         goupdatestatus = true
                         lua_thread.create(function() wait(500) thisScript():reload() end)
                       end
                       if status1 == dlstatus.STATUSEX_ENDDOWNLOAD then
                         if goupdatestatus == nil then
-                          sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..', прошло неудачно!'), main_color)
+                          sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..'{FFFFFF} прошло неудачно!'), main_color)
                                   update = false
                         end
                       end
