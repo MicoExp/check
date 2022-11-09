@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5.4')
+script_version('2.5.4 фикс')
 
 require('moonloader')
 require('sampfuncs')
@@ -170,7 +170,7 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Lexash_Holyman')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя: [sanyaobichniy|Lexash_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Исполняющий Обязанности Основателя: [sanyaobichniy|Lexash_Holyman], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
                 sampSendChat('/astats Sergio_Escobar')
                 parsim = true
