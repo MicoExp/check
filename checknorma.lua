@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5.4 фикс')
+script_version('2.5.4 fix')
 
 require('moonloader')
 require('sampfuncs')
