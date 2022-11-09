@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5.3 fix')
+script_version('2.5.4')
 
 require('moonloader')
 require('sampfuncs')
@@ -187,6 +187,11 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('Помощник Основателя: [den4hik69|xMoroz_Universe], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000)
+                sampSendChat('/astats Sushi_Uchiha')
+                parsim = true
+                wait(500)
+                file:write('Помощник Основателя: [id568140743|Sushi_Uchiha], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000)
                 file:write('\n— Ведущая администрация:\n')
                 sampSendChat('/astats Fking_Blockkid')
                 parsim = true
@@ -220,12 +225,11 @@ function imgui.OnDrawFrame( ... )
                 parsim = true
                 wait(500)
                 file:write('Главный следящий за Goss: [abelix_asterix|Fking_Cambridge], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                --[[wait(1000)
-                sampSendChat('/astats Edward_Yamaguchi')
+                wait(1000)
+                sampSendChat('/astats Milk_Hokage')
                 parsim = true
                 wait(500)
-                file:write('Главный следящий за Mafia: [jackmorales|Edward_Yamaguchi], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                ]]wait(1000)
+                file:write('Главный следящий за Mafia: [sikolllslike|Milk_Hokage], отыграл: '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')wait(1000)
                 sampSendChat('/astats Greck_Whells')
                 parsim = true
                 wait(500)
