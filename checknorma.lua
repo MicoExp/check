@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('0.0')
+script_version('2.3')
 
 require('moonloader')
 require('sampfuncs')
@@ -17,11 +17,10 @@ local samp              = require("lib.samp.events")
 local fa_glyph_ranges   = imgui.ImGlyphRanges({ fa.min_range, fa.max_range })
 local sw, sh            = getScreenResolution()
 local main_window       = imgui.ImBool(false)
-local settings     = imgui.ImBool(false)
+local time      = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
-local main_color = 0xFF7F50
-local tag = "{FF7F50}>> [Чекер нормы] "
-local god = {'января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'}
+local main_color = 0x00FA9A
+local tag = "{00FA9A}>> [checknorma] "
 
 local ini = inicfg.load({
     config = {
@@ -31,19 +30,20 @@ local ini = inicfg.load({
 }, 'checknorma.ini')
 inicfg.save(ini, 'checknorma.ini')
 
+file = io.open(getGameDirectory().."//moonloader//checker.txt", "w")
+filea = io.open(getGameDirectory().."//moonloader//achecker.txt", "w")
 
 function main()
     if not isSampLoaded() then return end
 	while not isSampAvailable() do wait(100) end
     autoupdate("https://raw.githubusercontent.com/MicoExp/check/main/check.json", '['..string.upper(thisScript().name)..']: ', "")
     style()
-    
+    sampAddChatMessage(tag..'{FFFFFF}успешно загружен, для активация: {00FA9A}/check', main_color)
     sampRegisterChatCommand('check', mph)
-    sampAddChatMessage(tag..'{FFFFFF}скрипт больше не работает.', main_color)
     
     while true do
-        imgui.ShowCursor = main_window.v or settings.v
-        imgui.Process = main_window.v
+        imgui.ShowCursor = main_window.v
+        imgui.Process = main_window.v or time.v
         wait(0)
         _, id = sampGetPlayerIdByCharHandle(PLAYER_PED)
 		nick = sampGetPlayerNickname(id)
@@ -64,7 +64,22 @@ function mph(args)
     main_window.v = true
 end
 
-
+function samp.onShowDialog(dialogId, style, title, button1, button2, text)
+	if parsim and dialogId == 228 and title:find("Статистика администратора") then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
+				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				lvl = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+        parsim = false
+		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
+	end
+end
 local arr = os.date("*t")
 
 function imgui.CenterText(text)
@@ -94,23 +109,17 @@ function imgui.BeforeDrawFrame()
     end
 end
 
-function FormatTime(time)
-    local timezone_offset = 86400 - os.date('%H', 0) * 3600
-    local time = time + timezone_offset
-    return os.date((os.date("%H",time) == "00" and '%M:%S' or '%H:%M:%S'), time)
-end
-
 function imgui.OnDrawFrame( ... )
     if main_window.v then
 	    imgui.SetNextWindowSize(imgui.ImVec2(240,215), imgui.Cond.FirstUseEver)
 	    imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-        imgui.Begin(u8'fdtools', main_window, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
+        imgui.Begin(u8'fdtools', main_window, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoMove + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
         imgui.PushFont(font_25)
         imgui.TextColoredRGB(u8'{D6D6D6}Checker')
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v0.0', u8'Точная версия (254)')
+        imgui.Hint(u8'{313742}v3.0', u8'Обновление от 28 января')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -120,39 +129,97 @@ function imgui.OnDrawFrame( ... )
         end
         imgui.PopFont()
         imgui.SetCursorPosY(65)
-        imgui.CenterText('Больше не работает')
-        imgui.End()
-    end
-    if settings.v then
-	    imgui.SetNextWindowSize(imgui.ImVec2(340,135), imgui.Cond.FirstUseEver)
-	    imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 1.33), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-        imgui.Begin(u8'##settings', settings, imgui.WindowFlags.NoResize + imgui.WindowFlags.NoCollapse + imgui.WindowFlags.NoTitleBar + imgui.WindowFlags.NoMove + imgui.WindowFlags.ShowBorders + imgui.WindowFlags.AlwaysUseWindowPadding)
-        if imgui.CircleButton('##orange', ini.config.theme == 1,  imgui.ImVec4(1.00, 0.42, 0.00, 1.00)) then
-            ini.config.theme = 1
-            inicfg.save(ini, 'fdtools.ini')
-            style()
+        if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
+            lua_thread.create(function()
+                sampAddChatMessage(tag..'{FFFFFF}началась проверка нормы! {CD5C5C}Не пишите{FFFFFF} ничего в чат!', main_color)
+                file:write('#НОРМА за '..arr.day..'.0'.. arr.month..'.'..arr.year..'\n\n')
+                file:write('— &#127807; Руководящая администрация:\n')
+                sampSendChat('/astats Karasik_Flex')
+                parsim = true
+                wait(500)
+                file:write('И.О. Основателя [id576310672|Karasik_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Takeda_Uchiha')
+                parsim = true
+                wait(500)
+                file:write('И.О. Основателя [id476560111|Takeda_Uchiha], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Andrei_Flex')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Основателя [id183634580|Andrei_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Vladimir_Suvorov')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Основателя [id558503680|Vladimir_Suvorov], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Alexander_Default')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Основателя [id627075201|Alexander_Default], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Jessie_Brooks')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Основателя [id688864687|Jessie_Brooks], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Georgy_Martirosyan')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Основателя [id638550462|Georgy_Martirosyan], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Christopher_Wayne')
+                parsim = true
+                wait(500)
+                file:write('Помощник Основателя Основателя [id812202790|Christopher_Wayne], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(500)
+                file:write('\n— &#127807; Ведущая администрация:\n')
+                sampSendChat('/astats Lonely_Flex]')
+                parsim = true
+                wait(500)
+                file:write('Куратор Сервера [id276256031|Lonely_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Kolya_Boomcats')
+                parsim = true
+                wait(500)
+                file:write('Заместиетль Куратора Сервера [id463232045|Kolya_Boomcats] , отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+            --    wait(1000) -- следующий
+            --    sampSendChat('/astats xPluton_Kirishima')
+           --     parsim = true
+                wait(500)
+                file:write('Руководитель — отсутствует.')
+                wait(1000) -- следующий
+                sampSendChat('/astats Sky_Skrillex')
+                parsim = true
+                wait(500)
+                file:write('Главный Администратор [id794865478|Sky_Skrillex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Artem_Karasikov')
+                parsim = true
+                wait(500)
+                file:write('Заместитель Главного Администратора [id799702904|Artem_Karasikov], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(500)
+                file:write('\n— &#127807; Главные следящие:\n')
+                sampSendChat('/astats SimBochka_Hollywood')
+                parsim = true
+                wait(500)
+                file:write('Главный следящий за Ghetto [id653102441|SimBochka_Hollywood], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Rafael_Ramone')
+                parsim = true
+                wait(500)
+                file:write('Главный следящий за Goss [id784434964|Rafael_Ramone], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                wait(1000) -- следующий
+                sampSendChat('/astats Nikolay_Wolscow')
+                parsim = true
+                wait(500)
+                file:write('Главный следящий за Mafia [id618410278|Nikolay_Wolscow], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:close()
+                sampAddChatMessage(tag..'{FFFFFF}проверка окончена! Проверьте файл {00FA9A}checker.txt', main_color)
+            end)       
         end
-        imgui.SameLine()
-        if imgui.CircleButton('##blue', ini.config.theme == 2, imgui.ImVec4(0.28, 0.56, 1.00, 1.00)) then
-            ini.config.theme = 2
-            inicfg.save(ini, 'fdtools.ini')
-            style()
-        end
-        imgui.SameLine()
-        if imgui.CircleButton('##green', ini.config.theme == 3, imgui.ImVec4(0.00, 0.80, 0.38, 1.00)) then
-            ini.config.theme = 3
-            inicfg.save(ini, 'fdtools.ini')
-            style()
-        end
-        imgui.SameLine()
-        if imgui.CircleButton('##pink', ini.config.theme == 4, imgui.ImVec4(0.41, 0.19, 0.63, 1.00)) then
-            ini.config.theme = 4
-            inicfg.save(ini, 'fdtools.ini')
-            style()
-        end
-        imgui.SetCursorPosY(94)
-        if imgui.MenuButton(u8'Закрыть', imgui.ImVec2(310,30)) then
-            settings.v = false
+        if imgui.MenuNoAButton(fa.ICON_FA_COGS..u8' Настройки', imgui.ImVec2(210,40)) then
         end
         imgui.End()
     end
@@ -365,26 +432,6 @@ function imgui.CloseButton(text, size)
 		local button = imgui.Button(text, size)
 	imgui.PopStyleColor(5)
 	return button
-end
-function imgui.CircleButton(str_id, bool, color4, radius, isimage)
-	local rBool = false
-
-	local p = imgui.GetCursorScreenPos()
-	local isimage = isimage or false
-	local radius = radius or 10
-	local draw_list = imgui.GetWindowDrawList()
-	if imgui.InvisibleButton(str_id, imgui.ImVec2(23, 23)) then
-		rBool = true
-	end
-
-	draw_list:AddCircleFilled(imgui.ImVec2(p.x + radius, p.y + radius), radius-3, imgui.ColorConvertFloat4ToU32(isimage and imgui.ImVec4(0,0,0,0) or color4))
-
-	if bool then
-		draw_list:AddCircle(imgui.ImVec2(p.x + radius, p.y + radius), radius, imgui.ColorConvertFloat4ToU32(color4),_,1.5)
-	end
-
-	imgui.SetCursorPosY(imgui.GetCursorPosY()+radius)
-	return rBool
 end
 
 function style()
@@ -640,7 +687,7 @@ function autoupdate(json_url, prefix, url)
                 lua_thread.create(function(prefix)
                   local dlstatus = require('moonloader').download_status
                   local color = -1
-                  sampAddChatMessage((tag..'{FFFFFF}Идёт обновление на новую версию {FF7F50}'..updateversion), main_color)
+                  sampAddChatMessage((tag..'{FFFFFF}Обновляюсь с '..thisScript().version..' на '..updateversion), main_color)
                   wait(250)
                   downloadUrlToFile(updatelink, thisScript().path,
                     function(id3, status1, p13, p23)
@@ -648,15 +695,15 @@ function autoupdate(json_url, prefix, url)
                         print(string.format('Загружено %d из %d.', p13, p23))
                       elseif status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
                         print('Загрузка обновления завершена.')
-                        sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..'{FFFFFF} прошло успешно!'), main_color)
+                        sampAddChatMessage((tag..'{FFFFFF}Успешно обновился!'), main_color)
                         updates.v = true
                         goupdatestatus = true
                         lua_thread.create(function() wait(500) thisScript():reload() end)
                       end
                       if status1 == dlstatus.STATUSEX_ENDDOWNLOAD then
                         if goupdatestatus == nil then
-                          sampAddChatMessage((tag..'{FFFFFF}Обновление на версию {FF7F50}'..updateversion..'{FFFFFF} прошло неудачно!'), main_color)
-                                  update = false
+                          sampAddChatMessage((tag..'{FFFFFF}Обновление прошло неудачно. Запускаю устаревшую версию..'), main_color)
+                          update = false
                         end
                       end
                     end
