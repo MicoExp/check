@@ -169,10 +169,10 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('Заместитель Основателя [id638550462|Georgy_Martirosyan], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(1000) -- следующий
-                sampSendChat('/astats Christopher_Wayne')
+                sampSendChat('/astats Christopher_Devils')
                 parsim = true
                 wait(500)
-                file:write('Помощник Основателя Основателя [id812202790|Christopher_Wayne], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Помощник Основателя Основателя [id812202790|Christopher_Devils], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
                 wait(500)
                 file:write('\n— &#127807; Ведущая администрация:\n')
                 sampSendChat('/astats Lonely_Flex]')
