@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.3')
+script_version('2.4')
 
 require('moonloader')
 require('sampfuncs')
@@ -183,12 +183,12 @@ function imgui.OnDrawFrame( ... )
                 sampSendChat('/astats Kolya_Boomcats')
                 parsim = true
                 wait(500)
-                file:write('Заместиетль Куратора Сервера [id463232045|Kolya_Boomcats] , отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('Заместиетль Куратора Сервера [id463232045|Kolya_Boomcats], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
             --    wait(1000) -- следующий
             --    sampSendChat('/astats xPluton_Kirishima')
            --     parsim = true
                 wait(500)
-                file:write('Руководитель — отсутствует.')
+                file:write('Руководитель — отсутствует.\n')
                 wait(1000) -- следующий
                 sampSendChat('/astats Sky_Skrillex')
                 parsim = true
