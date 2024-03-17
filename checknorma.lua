@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('2.5')
+script_version('3.1.1')
 
 require('moonloader')
 require('sampfuncs')
@@ -21,6 +21,7 @@ local time      = imgui.ImBool(false)
 local id_stats              = imgui.ImBuffer(256)
 local main_color = 0x00FA9A
 local tag = "{00FA9A}>> [checknorma] "
+local arr = os.date("*t")
 
 local ini = inicfg.load({
     config = {
@@ -30,7 +31,7 @@ local ini = inicfg.load({
 }, 'checknorma.ini')
 inicfg.save(ini, 'checknorma.ini')
 
-file = io.open(getGameDirectory().."//moonloader//checker.txt", "w")
+file = io.open(getGameDirectory()..'//moonloader//checker.txt', "w")
 filea = io.open(getGameDirectory().."//moonloader//achecker.txt", "w")
 
 function main()
@@ -57,30 +58,87 @@ function main()
 end
 
 function save()
-    inicfg.save(ini, "checknorma.ini")
+    inicfg.save(ini, 'checknorma.ini')
 end
 
 function mph(args)
     main_window.v = true
 end
-
 function samp.onShowDialog(dialogId, style, title, button1, button2, text)
-	if parsim and dialogId == 228 and title:find("Статистика администратора") then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
+	if parsim and dialogId == 228 then
+        for line in text:gmatch("[^\r\n]+") do 
+			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then 
+				adm_level = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") 
+			end
+		end
+        parsim = false
+        sampSendDialogResponse(228, 1, -1, 'Готово')
+		return false 
+	end
+end
+function samp.onShowDialog(dialogId, style, title, button1, button2, text)
+	if parsim and dialogId == 228 then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Имя:%s+%{dfb519%}%w+_%w+") then -- проверяем строку на нужный нам текст
+				a_nick = line:match("%{FFFFFF%}Имя:%s+%{dfb519%}(%w+_%w+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_level = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Выговоров:%s+%{dfb519%}%d+ из 3") then -- проверяем строку на нужный нам текст
+				adm_vig = line:match("%{FFFFFF%}Выговоров:%s+%{dfb519%}(%d+) из 3") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
 		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
 			if line:find("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
 				adm_onl_seg1, adm_onl_seg2 = line:match("%{FFFFFF%}В сети за сегодня:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
 			end
 		end
-        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				lvl = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}В сети за вчера:%s+%{dfb519%}%d+ час. %d+ мин") then -- проверяем строку на нужный нам текст
+				adm_onl_v1, adm_onl_v2 = line:match("%{FFFFFF%}В сети за вчера:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Ответов на репорт:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_rep = line:match("%{FFFFFF%}Ответов на репорт:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Кикнуто:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_kick = line:match("%{FFFFFF%}Кикнуто:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Заварнено:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_warn = line:match("%{FFFFFF%}Заварнено:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Забанено:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_ban = line:match("%{FFFFFF%}Забанено:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Выдача мута:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_mute = line:match("%{FFFFFF%}Выдача мута:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
+			end
+		end
+		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
+			if line:find("%{FFFFFF%}Посажено в тюрьму:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
+				adm_jail = line:match("%{FFFFFF%}Посажено в тюрьму:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
 			end
 		end
         parsim = false
+        sampSendDialogResponse(228, 1, -1, 'Готово')
 		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
 	end
 end
-local arr = os.date("*t")
+
 
 function imgui.CenterText(text)
     local width = imgui.GetWindowWidth()
@@ -119,7 +177,7 @@ function imgui.OnDrawFrame( ... )
         imgui.PopFont()
         imgui.SameLine()
         imgui.SetCursorPosY(25)
-        imgui.Hint(u8'{313742}v3.5', u8'Обновление от 19 июля')
+        imgui.Hint(u8'{313742}v3.1', u8'последняя версия 3.1.1')
         imgui.SameLine()
         imgui.SetCursorPosY(10)
         imgui.SetCursorPosX(196)
@@ -132,94 +190,110 @@ function imgui.OnDrawFrame( ... )
         if imgui.MenuButton(fa.ICON_FA_USER_CIRCLE..u8' Должностные', imgui.ImVec2(210, 40), 0.5, true) then
             lua_thread.create(function()
                 sampAddChatMessage(tag..'{FFFFFF}началась проверка нормы! {CD5C5C}Не пишите{FFFFFF} ничего в чат!', main_color)
-                file:write('#НОРМА за '..arr.day..'.0'.. arr.month..'.'..arr.year..'\n\n')
-                file:write('— &#127807; Руководящая администрация:\n')
-                sampSendChat('/astats Takeda_Uchiha')
+                file:write('&#10024; | РУКОВОДЯЩАЯ АДМИНИСТРАЦИЯ\n\n')
+                sampSendChat('/astats Rafael_Namikazze')
                 parsim = true
                 wait(500)
-                file:write('Доверенный Основатель [id476560111|Takeda_Uchiha], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Karasik_Flex')
+                file:write('— &#128081; Основатель — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Enrike_Boevoytank')
                 parsim = true
                 wait(500)
-                file:write('И.О. Основателя [id576310672|Karasik_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Vladimir_Suvorov')
+                file:write('— &#10024; И.О. Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Boulevard_Depo')
                 parsim = true
                 wait(500)
-                file:write('И.О. Основателя [id558503680|Vladimir_Suvorov], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Andrei_Flex')
+                file:write('— &#10024; И.О. Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Waka_Emporio')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя [id183634580|Andrei_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Alexander_Default')
+                file:write('— &#10024; И.О. Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Paradise_Lizergin')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя [id627075201|Alexander_Default], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Jessie_Brooks')
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Brian_Apostal')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя [id688864687|Jessie_Brooks], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Georgy_Martirosyan')
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Hideaki_Venturezzix')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя [id638550462|Georgy_Martirosyan], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Rafael_Ramone')
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Sean_Emporio')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Основателя [id784434964|Rafael_Ramone], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Lonely_Flex')
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Tema_Kingsman')
                 parsim = true
                 wait(500)
-                file:write('Помощник Основателя [id276256031|Lonely_Flex], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000)
-                file:write('\n— &#127807; Ведущая администрация:\n')
-                sampSendChat('/astats Kolya_Boomcats')
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Kichiro_Stics')
                 parsim = true
                 wait(500)
-                file:write('Куратор Сервера [id463232045|Kolya_Boomcats] , отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Artem_Karasikov')
+                file:write('— &#127794; Помощник Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Mellstroy_Emporio')
                 parsim = true
                 wait(500)
-                file:write('Заместиетль Куратора Сервера [id799702904|Artem_Karasikov], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats SimBochka_Hollywood')
+                file:write('— &#127794; Помощник Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Admin')
                 parsim = true
                 wait(500)
-                file:write('Руководитель [id653102441|SimBochka_Hollywood], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Nikolay_Aliyev')
+                file:write('— &#128736; Технический Администратор — Sergio_Escobar, отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                file:write('&#10024; | КРАСНАЯ АДМИНИСТРАЦИЯ\n\n')
+                sampSendChat('/astats Telepuzik_Aborigen')
                 parsim = true
                 wait(500)
-                file:write('Главный Администратор [id618410278|Nikolay_Aliyev], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Artem_Karasikov')
+                file:write('— &#127809; Куратор Сервера — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Gucci_Balenciaga')
                 parsim = true
                 wait(500)
-                file:write('Заместитель Главного Администратора — отсутствует.,\n')
-                wait(1000)
-                file:write('\n— &#127807; Главные следящие:\n')
-                sampSendChat('/astats xMars_Keywarrion')
+                file:write('— &#127809; Заместитель Куратора Сервера — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                file:write('&#10024; | ВЕДУЩАЯ АДМИНИСТРАЦИЯ\n\n')
+                sampSendChat('/astats Admin')
                 parsim = true
                 wait(500)
-                file:write('Главный следящий за Ghetto [id377647067|xMars_Keywarrion], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Dima_Aliyev')
+                file:write('— &#127810; Руководитель — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Criminalniy_Remba')
                 parsim = true
                 wait(500)
-                file:write('Главный следящий за Goss [id608630275|Dima_Aliyev], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
-                wait(1000) -- следующий
-                sampSendChat('/astats Dasha_Aliyeva')
+                file:write('— &#127810; Главный Администратор — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Admin')
                 parsim = true
                 wait(500)
-                file:write('Главный следящий за Mafia  [id404149458|Dasha_Aliyeva], отыграл '..adm_onl_seg1..' час. '..adm_onl_seg2..' мин.\n')
+                file:write('— &#127810; Заместитель Главного Администратора — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                file:write('&#10024; | ГЛАВНЫЕ СЛЕДЯЩИЕ\n\n')
+                sampSendChat('/astats Puff_Mackelly')
+                parsim = true
+                wait(500)
+                file:write('— &#127877; Главный следящий за [club205111423|Нелегальными Структурами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats xLiqwidator_Nuwea')
+                parsim = true
+                wait(500)
+                file:write('— &#127877; Главный следящий за [club205111407|Государственными Структурами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Gift_Legendary')
+                parsim = true
+                wait(500)
+                file:write('— &#127877; Главный следящий за [club205111448|Преступными Синдикатами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
                 file:close()
                 sampAddChatMessage(tag..'{FFFFFF}проверка окончена! Проверьте файл {00FA9A}checker.txt', main_color)
             end)       
@@ -692,7 +766,7 @@ function autoupdate(json_url, prefix, url)
                 lua_thread.create(function(prefix)
                   local dlstatus = require('moonloader').download_status
                   local color = -1
-                  sampAddChatMessage((tag..'{FFFFFF}Обновляюсь с '..thisScript().version..' на '..updateversion), main_color)
+                  sampAddChatMessage((tag..'{FFFFFF}Появились изменения в никах! Обновляюсь с '..thisScript().version..' на '..updateversion), main_color)
                   wait(250)
                   downloadUrlToFile(updatelink, thisScript().path,
                     function(id3, status1, p13, p23)
@@ -700,7 +774,7 @@ function autoupdate(json_url, prefix, url)
                         print(string.format('Загружено %d из %d.', p13, p23))
                       elseif status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
                         print('Загрузка обновления завершена.')
-                        sampAddChatMessage((tag..'{FFFFFF}Успешно обновился!'), main_color)
+                        sampAddChatMessage((tag..'{FFFFFF}Обновления прошло успешно! Можно пользоваться :)'), main_color)
                         updates.v = true
                         goupdatestatus = true
                         lua_thread.create(function() wait(500) thisScript():reload() end)
