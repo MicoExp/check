@@ -1,7 +1,7 @@
 script_name('chechnorma')
 script_author('Mico')
 script_description('Проверка нормы')
-script_version('3.1.1')
+script_version('3.1.2')
 
 require('moonloader')
 require('sampfuncs')
@@ -10,10 +10,9 @@ encoding.default        = "CP1251"
 u8                      = encoding.UTF8 
 local imgui             = require 'imgui'
 local inicfg            = require 'inicfg'
-local vkeys             = require 'vkeys'
-local rkeys             = require 'rkeys'
 local fa                = require 'fAwesome5'
 local samp              = require("lib.samp.events")
+
 local fa_glyph_ranges   = imgui.ImGlyphRanges({ fa.min_range, fa.max_range })
 local sw, sh            = getScreenResolution()
 local main_window       = imgui.ImBool(false)
@@ -65,32 +64,10 @@ function mph(args)
     main_window.v = true
 end
 function samp.onShowDialog(dialogId, style, title, button1, button2, text)
-	if parsim and dialogId == 228 then
-        for line in text:gmatch("[^\r\n]+") do 
-			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then 
-				adm_level = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") 
-			end
-		end
-        parsim = false
-        sampSendDialogResponse(228, 1, -1, 'Готово')
-		return false 
-	end
-end
-function samp.onShowDialog(dialogId, style, title, button1, button2, text)
 	if parsim and dialogId == 228 then -- как и говорил, хер знает почему, но половина диалогов на РРП с идом 228, по-этому делаем дополнительную через тайтл
 		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
 			if line:find("%{FFFFFF%}Имя:%s+%{dfb519%}%w+_%w+") then -- проверяем строку на нужный нам текст
 				a_nick = line:match("%{FFFFFF%}Имя:%s+%{dfb519%}(%w+_%w+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-        for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Административный уровень:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_level = line:match("%{FFFFFF%}Административный уровень:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Выговоров:%s+%{dfb519%}%d+ из 3") then -- проверяем строку на нужный нам текст
-				adm_vig = line:match("%{FFFFFF%}Выговоров:%s+%{dfb519%}(%d+) из 3") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
 			end
 		end
 		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
@@ -103,42 +80,11 @@ function samp.onShowDialog(dialogId, style, title, button1, button2, text)
 				adm_onl_v1, adm_onl_v2 = line:match("%{FFFFFF%}В сети за вчера:%s+%{dfb519%}(%d+) час. (%d+) мин") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
 			end
 		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Ответов на репорт:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_rep = line:match("%{FFFFFF%}Ответов на репорт:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Кикнуто:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_kick = line:match("%{FFFFFF%}Кикнуто:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Заварнено:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_warn = line:match("%{FFFFFF%}Заварнено:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Забанено:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_ban = line:match("%{FFFFFF%}Забанено:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Выдача мута:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_mute = line:match("%{FFFFFF%}Выдача мута:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
-		for line in text:gmatch("[^\r\n]+") do -- парсим каждую строку
-			if line:find("%{FFFFFF%}Посажено в тюрьму:%s+%{dfb519%}%d+") then -- проверяем строку на нужный нам текст
-				adm_jail = line:match("%{FFFFFF%}Посажено в тюрьму:%s+%{dfb519%}(%d+)") -- всю эту бадулу выводим в переменную, чтобы потом использовать можно было её
-			end
-		end
         parsim = false
         sampSendDialogResponse(228, 1, -1, 'Готово')
 		return false -- не показываем этот самый диалог пользователю, ибо нахер он ему нужен
 	end
 end
-
 
 function imgui.CenterText(text)
     local width = imgui.GetWindowWidth()
@@ -211,7 +157,7 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— &#10024; И.О. Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
-                sampSendChat('/astats Paradise_Lizergin')
+                sampSendChat('/astats Phantom_Eightzz')
                 parsim = true
                 wait(500)
                 file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
@@ -236,6 +182,11 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
+                sampSendChat('/astats Rovshan_Rastamanov')
+                parsim = true
+                wait(500)
+                file:write('— &#127812; Заместитель Основателя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
                 sampSendChat('/astats Kichiro_Stics')
                 parsim = true
                 wait(500)
@@ -252,7 +203,7 @@ function imgui.OnDrawFrame( ... )
                 file:write('— &#128736; Технический Администратор — Sergio_Escobar, отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
                 file:write('&#10024; | КРАСНАЯ АДМИНИСТРАЦИЯ\n\n')
-                sampSendChat('/astats Telepuzik_Aborigen')
+                sampSendChat('/astats Admin')
                 parsim = true
                 wait(500)
                 file:write('— &#127809; Куратор Сервера — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
@@ -263,23 +214,28 @@ function imgui.OnDrawFrame( ... )
                 file:write('— &#127809; Заместитель Куратора Сервера — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
                 file:write('&#10024; | ВЕДУЩАЯ АДМИНИСТРАЦИЯ\n\n')
-                sampSendChat('/astats Admin')
+                sampSendChat('/astats Criminalniy_Remba')
                 parsim = true
                 wait(500)
                 file:write('— &#127810; Руководитель — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
-                sampSendChat('/astats Criminalniy_Remba')
+                sampSendChat('/astats Dmitry_Korsakov')
+                parsim = true
+                wait(500)
+                file:write('— &#127810; Заместитель Руководителя — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
+                wait(5000)
+                sampSendChat('/astats Mapname_View')
                 parsim = true
                 wait(500)
                 file:write('— &#127810; Главный Администратор — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
-                sampSendChat('/astats Admin')
+                sampSendChat('/astats Naomi_Valverde')
                 parsim = true
                 wait(500)
                 file:write('— &#127810; Заместитель Главного Администратора — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
                 file:write('&#10024; | ГЛАВНЫЕ СЛЕДЯЩИЕ\n\n')
-                sampSendChat('/astats Puff_Mackelly')
+                sampSendChat('/astats Eye_Kachika')
                 parsim = true
                 wait(500)
                 file:write('— &#127877; Главный следящий за [club205111423|Нелегальными Структурами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
@@ -289,7 +245,7 @@ function imgui.OnDrawFrame( ... )
                 wait(500)
                 file:write('— &#127877; Главный следящий за [club205111407|Государственными Структурами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
                 wait(5000)
-                sampSendChat('/astats Gift_Legendary')
+                sampSendChat('/astats Molniya_Emperor')
                 parsim = true
                 wait(500)
                 file:write('— &#127877; Главный следящий за [club205111448|Преступными Синдикатами] — '..a_nick..', отыграл: '..adm_onl_seg1..'ч. '..adm_onl_seg2..'м.\n\n')
